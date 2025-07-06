@@ -15,8 +15,26 @@ public class QuaternaryTree {
     private NodePlacementStrategy strategy;
     private String separator = "|";
 
+    public void setRoot(QuaternaryTreeNode root) {
+        this.root = root;
+    }
+    public void setStrategy(NodePlacementStrategy strategy) {
+        this.strategy = strategy;
+    }
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
     public QuaternaryTree() {
         
+    }
+    public QuaternaryTreeNode getRoot() {
+        return root;
+    }
+    public NodePlacementStrategy getStrategy() {
+        return strategy;
+    }
+    public String getSeparator() {
+        return separator;
     }
     public QuaternaryTree(NodePlacementStrategy strategy) {
         this.strategy = Objects.requireNonNull(strategy);
@@ -24,31 +42,31 @@ public class QuaternaryTree {
     }
 
     // Iterative insertion
-    public void insert(int value) {
+    /**
+     * @param value
+     * @throws IllegalArgumentException
+     */
+    public void insert(int value) throws IllegalArgumentException {
         if (root == null) {
             root = new QuaternaryTreeNode(value);
-            System.out.println("Inserted root: " + value);
             return;
         }
 
         QuaternaryTreeNode current = root;
-        System.out.println("Current " + current.value + " Value " + value);
+        
         while (true) {
-            System.out.println(" inside while Current " + current.value + " Value " + value);
+            
             ChildType type = this.strategy.determineChildType(current.value, value);
             
             if (null == type) {
-                // Value already exists (duplicate), do nothing
-                return;
-            } 
-            else switch (type) {
+                throw new IllegalArgumentException("Duplication Error");
+            }else switch (type) {
                 case MUCH_SMALLER -> {
                     if (current.muchSmaller == null) {
                         current.muchSmaller = new QuaternaryTreeNode(value);
                         return;
-                    }   System.out.println("Current " + current.value + " Value " + value);
+                    } 
                     current = current.muchSmaller;
-                    System.out.println("Current MUCH SMALLER " + current.value + " Value " + value);
                 }
                 case SMALLER -> {
                     if (current.smaller == null) {
@@ -69,8 +87,7 @@ public class QuaternaryTree {
                     }   current = current.bigger;
                 }
                 default -> {
-                    // Value already exists (duplicate), do nothing
-                    return;
+                    throw new IllegalArgumentException("Duplication Error");
                 }
             }
         }
@@ -128,16 +145,14 @@ public class QuaternaryTree {
         }
     }
  
-    public static void buildAndPrintQuaternaryTree(int[] array, NodePlacementStrategy strategy) {
+    public static void buildAndPrintQuaternaryTree(int[] array, NodePlacementStrategy strategy) throws Throwable{
        
         if (array == null || array.length == 0) {
-            System.out.println("Empty array - no tree to build.");
-            return;
+            throw new IllegalArgumentException("Array must not be null or empty");
         }
         
         QuaternaryTree tree = new QuaternaryTree(strategy);
         for (int num : array) {
-            System.out.println("Inserting: " + num);
             tree.insert(num);
         }
 
