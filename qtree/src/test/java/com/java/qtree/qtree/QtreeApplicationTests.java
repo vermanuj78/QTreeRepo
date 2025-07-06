@@ -7,9 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.java.qtree.qtree.factory.QTreeFactory;
 import com.java.qtree.qtree.strategy.NodePlacementStrategy;
-import com.java.qtree.qtree.strategy.SizeBasedNodePlacementStrategy;
-
 class QuaternaryTreeTest {
 
     private QuaternaryTree tree;
@@ -17,12 +16,14 @@ class QuaternaryTreeTest {
 
     @BeforeEach
     public void setUp() {
-        strategy = new SizeBasedNodePlacementStrategy();
-        tree = new QuaternaryTree(strategy);
+        
+        tree = (QuaternaryTree) QTreeFactory.createQTree(QTreeFactory.StrategyType.SIZE_BASED);
+        strategy = tree.getStrategy();
+        
     }
 
     // Helper method to access root for testing
-    private QuaternaryTreeNode getRoot(QuaternaryTree tree) {
+    private QuaternaryTreeNode getRoot(Tree tree) {
         try {
             java.lang.reflect.Field field = QuaternaryTree.class.getDeclaredField("root");
             field.setAccessible(true);
@@ -83,7 +84,7 @@ class QuaternaryTreeTest {
     @Test
     void testInsertDuplicate() {
         tree.insert(50);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> tree.insert(50),
+       assertThrows(IllegalArgumentException.class, () -> tree.insert(50),
             "Should throw IllegalArgumentException for duplicate value");
        
     }
@@ -98,7 +99,7 @@ class QuaternaryTreeTest {
    @Test
     void testBuildAndPrintQuaternaryTree() {
         int[] array = {50, 30, 70, 20, 40, 60, 80};
-        assertDoesNotThrow(() -> QuaternaryTree.buildAndPrintQuaternaryTree(array, strategy),
+        assertDoesNotThrow(() -> tree.populateAndPrintTree(array),
             "buildAndPrintQuaternaryTree should execute without exceptions");
     }
 }

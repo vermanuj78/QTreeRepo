@@ -9,7 +9,7 @@ import com.java.qtree.qtree.strategy.NodePlacementStrategy;
 import com.java.qtree.qtree.strategy.NodePlacementStrategy.ChildType;
 
 @Service
-public class QuaternaryTree {
+public class QuaternaryTree implements Tree {
      
     private QuaternaryTreeNode root;
     private NodePlacementStrategy strategy;
@@ -46,6 +46,7 @@ public class QuaternaryTree {
      * @param value
      * @throws IllegalArgumentException
      */
+    @Override
     public void insert(int value) throws IllegalArgumentException {
         if (root == null) {
             root = new QuaternaryTreeNode(value);
@@ -94,6 +95,7 @@ public class QuaternaryTree {
     }
 
     // Iterative tree printing using a stack
+    @Override
     public void printTree() {
         if (root == null) {
             System.out.println("Tree is empty");
@@ -145,18 +147,18 @@ public class QuaternaryTree {
         }
     }
  
-    public static void buildAndPrintQuaternaryTree(int[] array, NodePlacementStrategy strategy) throws Throwable{
+    @Override
+    public void populateAndPrintTree(int[] array) throws Throwable{
        
         if (array == null || array.length == 0) {
             throw new IllegalArgumentException("Array must not be null or empty");
         }
         
-        QuaternaryTree tree = new QuaternaryTree(strategy);
         for (int num : array) {
-            tree.insert(num);
+            insert(num);
         }
 
         System.out.println("Quaternary Tree Structure:");
-        tree.printTree();
+        printTree();
     }
 }
